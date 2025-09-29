@@ -141,7 +141,7 @@ class App(tk.Tk):
         ttk.Label(mid, text="Дата до (дд/мм/гггг):").grid(row=1, column=0, sticky="w", pady=(6, 0))
         self.ent_to = ttk.Entry(mid, width=14)
         self.ent_to.grid(row=1, column=1, padx=(6, 0), sticky="w", pady=(6, 0))
-        self.ent_to.insert(0, "31/12/2025")
+        self.ent_to.insert(0, "31/12/2035")
 
         # Правый блок — кнопки
         right = ttk.Frame(control)
