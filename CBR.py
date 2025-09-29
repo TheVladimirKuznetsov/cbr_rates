@@ -96,13 +96,13 @@ def load_currency(code_id: str, label_display: str, date_from: str, date_to: str
     r.raise_for_status()
     df = pd.read_xml(r.content, xpath=".//Record")
     if df is None or df.empty:
-        # Вернём пустой с нужными колонками
-        col = label_display.split()[0]  # "USD (Доллар...)" -> "USD"
+        
+        col = label_display.split()[0]
         return pd.DataFrame(columns=["Date", col])
 
     df["Date"] = pd.to_datetime(df["Date"], format="%d.%m.%Y")
-    col = label_display.split()[0]  # колонка в итоговой таблице: USD/EUR/...
-    # Значение приходит с запятой, делим на Nominal (на случай номинала != 1)
+    col = label_display.split()[0]
+    
     df[col] = (
         df["Value"].astype(str).str.replace(",", ".", regex=False).astype(float)
         / df["Nominal"].astype(float)
@@ -171,7 +171,7 @@ class App(tk.Tk):
         self.df_data: pd.DataFrame | None = None
         self.setup_empty_table()
 
-    # ---- Вспомогательные методы GUI ----
+    # Вспомогательные методы GUI
     def setup_empty_table(self):
         for col in self.tree["columns"]:
             self.tree.heading(col, text="")
@@ -191,7 +191,7 @@ class App(tk.Tk):
         except ValueError:
             return False
 
-    # ---- Обработчики ----
+    # Обработчики
     def on_load_clicked(self):
         sel_indices = self.lst.curselection()
         if not sel_indices:
@@ -216,7 +216,7 @@ class App(tk.Tk):
             dfs = []
             for label_display in chosen:
                 code = CODES[label_display]
-                df = load_currency(code, label_display, dfrom, dto)  # колонка: "USD", "EUR", ...
+                df = load_currency(code, label_display, dfrom, dto) 
                 dfs.append(df)
 
             if not dfs:
@@ -259,7 +259,7 @@ class App(tk.Tk):
                 values[i] = "" if pd.isna(v) else f"{v:.6f}"
             self.tree.insert("", tk.END, values=values)
 
-    # ---- Экспорт в Excel ----
+    # Экспорт в Excel
     def export_excel(self):
         if self.df_data is None or self.df_data.empty:
             messagebox.showinfo("Экспорт", "Нет данных для экспорта.")
